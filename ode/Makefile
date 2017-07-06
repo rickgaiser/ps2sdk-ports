@@ -1,4 +1,4 @@
-libs:
+all:
 	make -C OPCODE
 	make -C OPCODE/Ice
 	make -C ode/src 

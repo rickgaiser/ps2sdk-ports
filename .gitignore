@@ -3,3 +3,5 @@
 *.erl
 *.irx
 *.o
+libpng/pnglibconf.*
+romfs/tools/genromfs/genromfs

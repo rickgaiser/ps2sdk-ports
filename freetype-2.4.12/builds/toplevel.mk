@@ -153,6 +153,9 @@ else
 
 endif # test check_platform
 
+install:
+	cp objs/libfreetype.a $(PS2SDK)/ports/lib
+	cp -Rv include/* $(PS2SDK)/ports/include
 
 # We always need the list of modules in ftmodule.h.
 #
