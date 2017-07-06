@@ -1,0 +1,84 @@
+# _____     ___ ____     ___ ____
+#  ____|   |    ____|   |        | |____|
+# |     ___|   |____ ___|    ____| |    \    PS2DEV Open Source Project.
+#-----------------------------------------------------------------------
+# Copyright 2001-2004, ps2dev - http://www.ps2dev.org
+# Licenced under Academic Free License version 2.0
+# Review ps2sdk README & LICENSE files for further details.
+
+
+#
+# Creates the base ports directory structure in target directory.
+#
+
+RELEASE_PORTS_DIRS = ports/ ports/include/ ports/lib/ ports/bin/ ports/startup
+RELEASE_PORTS_DIRS := $(RELEASE_PORTS_DIRS:%=$(PS2SDK)/%)
+
+
+release-ports-dirs:
+	$(MKDIR) -p $(RELEASE_PORTS_DIRS)
+
+
+#
+# Most targets will only have a single EE_LIB target.  if the file
+# exists then copy it to the ports/lib directory.
+#
+
+release-ports-lib:
+	@if test $(EE_LIB) ; then \
+	   $(ECHO) Installing $(EE_LIB) to $(PS2SDK)/ports/lib ; \
+	   cp -f $(EE_LIB) $(PS2SDK)/ports/lib ; \
+	   cp -f $(EE_LIB:%.a=%.erl) $(PS2SDK)/ports/lib ; \
+	   chmod 644 $(PS2SDK)/ports/$(EE_LIB) $(PS2SDK)/ports/$(EE_LIB:%.a=%.erl); \
+	fi;
+
+
+#
+# Any elf files should go to ports/bin
+#
+
+release-ports-bin:
+	@if test $(EE_BIN) ; then \
+	   $(ECHO) Installing $(EE_BIN) to $(PS2SDK)/ports/bin ; \
+	   cp -f $(EE_BIN) $(PS2SDK)/ports/bin ; \
+	   chmod 644 $(PS2SDK)/ports/$(EE_BIN) ; \
+	fi;
+
+#
+# Any file in the include directory will be copied to the ports/include
+# directory.  This does not currently handle subdirectories.
+#
+
+release-ports-include:
+	@if test -d include ; then \
+	   for file in include/*; do \
+	      if test -f $$file ; then \
+	         $(ECHO) Installing $$file to $(PS2SDK)/ports/include ; \
+	         cp -f $$file $(PS2SDK)/ports/include ; \
+	         chmod 644 $(PS2SDK)/ports/$$file ; \
+	      fi \
+	   done; \
+	fi;
+
+
+#
+# If there is a samples directory.  Call makefile.
+# Samples use their own release target based on the samples/Rules.sample
+# makefile.
+#
+
+release-ports-samples:
+	@if test -f samples/Makefile ; then \
+	   $(GNUMAKE) -C samples release ; \
+	fi;
+
+
+release: release-ports-dirs release-ports-lib release-ports-bin release-ports-include release-ports-samples
+
+install: release
+
+release-ports-clean:
+	rm -f $(PS2SDK)/ports/include/*
+	rm -f $(PS2SDK)/ports/bin/*
+	rm -f $(PS2SDK)/ports/startup/*
+	rm -f $(PS2SDK)/ports/lib/*
