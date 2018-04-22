@@ -13,9 +13,9 @@ ZLIB_TEST_LDFLAGS = -L$(PS2SDK)/ee/lib
 
 all: $(EE_LIB) $(ZLIB_TEST_BIN)
 
-$(ZLIB_TEST_BIN) : $(ZLIB_TEST_OBJS) $(PS2SDK)/ee/startup/crt0.o
-	$(EE_CC) -mno-crt0 -T$(PS2SDK)/ee/startup/linkfile $(ZLIB_TEST_CFLAGS) \
-		-o $(ZLIB_TEST_BIN) $(PS2SDK)/ee/startup/crt0.o $(ZLIB_TEST_OBJS) $(ZLIB_TEST_LDFLAGS) $(ZLIB_TEST_LIBS)
+$(ZLIB_TEST_BIN) : $(ZLIB_TEST_OBJS)
+	$(EE_CC) $(ZLIB_TEST_CFLAGS) \
+		-o $(ZLIB_TEST_BIN) $(ZLIB_TEST_OBJS) $(ZLIB_TEST_LDFLAGS) $(ZLIB_TEST_LIBS)
 install: all
 	mkdir -p $(DESTDIR)$(PS2SDK)/ports/include
 	mkdir -p $(DESTDIR)$(PS2SDK)/ports/lib
